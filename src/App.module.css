@@ -1,0 +1,310 @@
+/* ── Layout ──────────────────────────────────────────────────────────────── */
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+}
+
+.main {
+  width: 100%;
+  max-width: 480px;
+  padding: 1.25rem 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Logo ─────────────────────────────────────────────────────────────────── */
+.logoWrap {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.logoSvg {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+}
+
+/* ── Number selector ─────────────────────────────────────────────────────── */
+.numSelector {
+  margin-bottom: 1.25rem;
+}
+
+.selectorLabel {
+  font-size: 0.8125rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.numGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.numBtn {
+  aspect-ratio: 1;
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1.5px solid #d8d4f5;
+  background: #fff;
+  color: #3C3489;
+  font-size: clamp(14px, 3.5vw, 16px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s, border-color 0.1s, transform 0.08s;
+  touch-action: manipulation;
+}
+
+.numBtn:active {
+  transform: scale(0.93);
+}
+
+.numBtnAll {
+  grid-column: span 2;
+  aspect-ratio: unset;
+  font-size: clamp(13px, 3vw, 15px);
+}
+
+.numBtnActive {
+  background: #3C3489;
+  color: #EEEDFE;
+  border-color: #3C3489;
+}
+
+.selectorHint {
+  font-size: 0.75rem;
+  color: #999;
+  text-align: center;
+  margin-top: 0.4rem;
+}
+
+/* ── Question card ────────────────────────────────────────────────────────── */
+.questionCard {
+  background: #fff;
+  border: 1.5px solid #e8e5ff;
+  border-radius: 16px;
+  padding: 1.5rem 1rem 1.25rem;
+  text-align: center;
+  margin-bottom: 0.625rem;
+}
+
+.questionText {
+  font-size: clamp(28px, 8vw, 36px);
+  font-weight: 500;
+  color: #111;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.answerDisplay {
+  font-size: clamp(26px, 7vw, 32px);
+  font-weight: 500;
+  min-height: 48px;
+  display: inline-block;
+  min-width: 80px;
+  letter-spacing: 3px;
+  color: #888;
+  border-bottom: 2.5px solid #ddd;
+  padding-bottom: 2px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.answer_correct {
+  color: #3B6D11;
+  border-color: #639922;
+}
+
+.answer_wrong {
+  color: #A32D2D;
+  border-color: #E24B4A;
+}
+
+/* ── Feedback ─────────────────────────────────────────────────────────────── */
+.feedbackPlaceholder {
+  min-height: 40px;
+  margin-bottom: 0.625rem;
+}
+
+.feedback {
+  font-size: clamp(16px, 4.5vw, 20px);
+  font-weight: 500;
+  text-align: center;
+  min-height: 40px;
+  margin-bottom: 0.625rem;
+  animation: popIn 0.2s ease-out;
+}
+
+.feedback_correct { color: #3B6D11; }
+.feedback_wrong   { color: #A32D2D; }
+
+@keyframes popIn {
+  0%   { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+/* ── Keypad ───────────────────────────────────────────────────────────────── */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.key {
+  height: clamp(56px, 14vw, 68px);
+  border-radius: 10px;
+  border: 1.5px solid #e0dcff;
+  background: #fff;
+  color: #111;
+  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 500;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.1s, transform 0.08s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.key:not(:disabled):active {
+  transform: scale(0.92);
+  background: #f0eeff;
+}
+
+.key:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.keyDel {
+  font-size: clamp(15px, 4vw, 18px);
+  color: #666;
+}
+
+.keyCheck {
+  font-size: clamp(17px, 4.5vw, 20px);
+  color: #3C3489;
+  font-weight: 600;
+}
+
+/* ── Action buttons ──────────────────────────────────────────────────────── */
+.actionBtn {
+  width: 100%;
+  height: clamp(52px, 13vw, 60px);
+  border-radius: 12px;
+  font-size: clamp(16px, 4vw, 18px);
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 0.625rem;
+  touch-action: manipulation;
+  transition: background 0.12s, transform 0.08s;
+}
+
+.actionBtn:active {
+  transform: scale(0.98);
+}
+
+.checkBtn {
+  border: none;
+  background: #534AB7;
+  color: #EEEDFE;
+}
+
+.checkBtn:hover:not(:disabled) {
+  background: #3C3489;
+}
+
+.checkBtnDisabled {
+  background: #ddd;
+  color: #aaa;
+  cursor: default;
+}
+
+.checkBtnDisabled:active {
+  transform: none;
+}
+
+.nextBtn {
+  border: 1.5px solid #d8d4f5;
+  background: #fff;
+  color: #534AB7;
+}
+
+.nextBtn:hover {
+  background: #f0eeff;
+}
+
+/* ── Score bar ────────────────────────────────────────────────────────────── */
+.scoreBar {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.scorePill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 99px;
+  border: 1px solid #e8e5ff;
+  background: #fff;
+  min-width: 72px;
+}
+
+.scoreLabel {
+  font-size: 11px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.scoreVal {
+  font-size: 18px;
+  font-weight: 500;
+  color: #3C3489;
+  line-height: 1.2;
+}
+
+/* ── Floating emojis ─────────────────────────────────────────────────────── */
+.cloudLayer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.cloud {
+  position: absolute;
+  font-size: clamp(30px, 8vw, 40px);
+  animation: floatUp 1.4s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes floatUp {
+  0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-140px) scale(1.5) rotate(15deg); }
+}
+
+/* ── Responsive: wider screens get a bit more breathing room ─────────────── */
+@media (min-width: 480px) {
+  .main {
+    padding: 1.75rem 1.25rem 2.5rem;
+  }
+
+  .keypad {
+    gap: 10px;
+  }
+
+  .scoreBar {
+    gap: 12px;
+  }
+}
