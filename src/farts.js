@@ -1,178 +1,53 @@
-// Math Tooter — Fart Sound Library
-// 6 distinct synthesized variations, randomized on each call.
+// Math Tooter — Fart Sound Player
+// Loads real audio files from src/farts/
+// Supports .mp3, .wav, and .flac
 
-let audioCtx = null;
+// ── List your actual filenames here ─────────────────────────────────────────
+// Vite imports assets from src/ at build time, so we import each file directly.
+// Rename your files to match, or update these imports to match your filenames.
 
-function getCtx() {
-  if (!audioCtx || audioCtx.state === 'closed') {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-  return audioCtx;
-}
+import fart1 from './farts/fart1.wav';
+import fart2 from './farts/fart2.flac';
+import fart3 from './farts/fart3.wav';
+import fart4 from './farts/fart4.wav';
+import fart5 from './farts/fart5.wav';
+import fart6 from './farts/fart6.wav';
+import fart7 from './farts/fart7.mp3';
+import fart8 from './farts/fart8.wav';
+import fart9 from './farts/fart9.mp3';
+import fart10 from './farts/fart10.wav';
+import fart11 from './farts/fart11.mp3';
 
-function makeBuffer(ctx, duration) {
-  return ctx.createBuffer(1, Math.floor(ctx.sampleRate * duration), ctx.sampleRate);
-}
-
-function connectAndPlay(ctx, src, gain, duration) {
-  const gainNode = ctx.createGain();
-  gainNode.gain.setValueAtTime(gain, ctx.currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-  src.connect(gainNode);
-  gainNode.connect(ctx.destination);
-  src.start();
-}
-
-// 1. Classic wet toot — mid-length, bubbly
-function fartClassic(ctx) {
-  const dur = 0.45;
-  const buf = makeBuffer(ctx, dur);
-  const d = buf.getChannelData(0);
-  const sr = ctx.sampleRate;
-  for (let i = 0; i < d.length; i++) {
-    const t = i / sr;
-    const env = Math.exp(-t * 6) * Math.max(0, 1 - t * 1.8);
-    const noise = Math.random() * 2 - 1;
-    const buzz = Math.sin(2 * Math.PI * (80 + 100 * Math.exp(-t * 6)) * t);
-    const wobble = Math.sin(2 * Math.PI * 8 * t) * 0.3;
-    d[i] = env * (noise * 0.45 + buzz * (0.4 + wobble) + 0.15 * Math.sin(2 * Math.PI * 160 * t));
-  }
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  connectAndPlay(ctx, src, 0.85, dur);
-}
-
-// 2. Short squeaker — high-pitched quick poot
-function fartSqueaker(ctx) {
-  const dur = 0.18;
-  const buf = makeBuffer(ctx, dur);
-  const d = buf.getChannelData(0);
-  const sr = ctx.sampleRate;
-  for (let i = 0; i < d.length; i++) {
-    const t = i / sr;
-    const env = Math.exp(-t * 18) * Math.max(0, 1 - t * 5);
-    const noise = Math.random() * 2 - 1;
-    const pitch = 300 + 600 * Math.exp(-t * 15);
-    const buzz = Math.sin(2 * Math.PI * pitch * t);
-    d[i] = env * (noise * 0.3 + buzz * 0.7);
-  }
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  connectAndPlay(ctx, src, 0.7, dur);
-}
-
-// 3. Long rumbler — slow, deep, rumbly
-function fartRumbler(ctx) {
-  const dur = 0.85;
-  const buf = makeBuffer(ctx, dur);
-  const d = buf.getChannelData(0);
-  const sr = ctx.sampleRate;
-  for (let i = 0; i < d.length; i++) {
-    const t = i / sr;
-    const env = Math.pow(Math.max(0, 1 - t / dur), 1.5) * (1 - Math.exp(-t * 20));
-    const noise = Math.random() * 2 - 1;
-    const pitch = 40 + 30 * Math.sin(2 * Math.PI * 2.5 * t);
-    const buzz = Math.sin(2 * Math.PI * pitch * t);
-    const sub = Math.sin(2 * Math.PI * 20 * t);
-    d[i] = env * (noise * 0.5 + buzz * 0.3 + sub * 0.2);
-  }
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  connectAndPlay(ctx, src, 0.9, dur);
-}
-
-// 4. Sputtering machine-gun — rapid-fire bursts
-function fartSputter(ctx) {
-  const dur = 0.55;
-  const buf = makeBuffer(ctx, dur);
-  const d = buf.getChannelData(0);
-  const sr = ctx.sampleRate;
-  for (let i = 0; i < d.length; i++) {
-    const t = i / sr;
-    const envelope = Math.exp(-t * 4);
-    const gate = Math.abs(Math.sin(2 * Math.PI * 22 * t)) > 0.35 ? 1 : 0.05;
-    const noise = Math.random() * 2 - 1;
-    const buzz = Math.sin(2 * Math.PI * (90 + 60 * Math.exp(-t * 3)) * t);
-    d[i] = envelope * gate * (noise * 0.4 + buzz * 0.6);
-  }
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  connectAndPlay(ctx, src, 0.8, dur);
-}
-
-// 5. Airy whoopee — classic cushion style
-function fartWhoopee(ctx) {
-  const dur = 0.6;
-  const buf = makeBuffer(ctx, dur);
-  const d = buf.getChannelData(0);
-  const sr = ctx.sampleRate;
-  for (let i = 0; i < d.length; i++) {
-    const t = i / sr;
-    const env = Math.exp(-t * 5) * (1 - Math.exp(-t * 30));
-    const pitch = 120 - 60 * (t / dur);
-    const buzz = Math.sin(2 * Math.PI * pitch * t);
-    const overtone = Math.sin(2 * Math.PI * pitch * 2.7 * t) * 0.3;
-    const noise = (Math.random() * 2 - 1) * 0.2;
-    d[i] = env * (buzz * 0.5 + overtone + noise);
-  }
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  connectAndPlay(ctx, src, 0.75, dur);
-}
-
-// 6. Surprised squeal — rises then falls, like stepping on a rubber duck
-function fartSqueal(ctx) {
-  const dur = 0.38;
-  const buf = makeBuffer(ctx, dur);
-  const d = buf.getChannelData(0);
-  const sr = ctx.sampleRate;
-  for (let i = 0; i < d.length; i++) {
-    const t = i / sr;
-    const progress = t / dur;
-    const env = Math.sin(Math.PI * progress) * Math.exp(-progress * 3);
-    const pitch = 180 + 280 * Math.sin(Math.PI * progress * 0.8);
-    const buzz = Math.sin(2 * Math.PI * pitch * t);
-    const noise = (Math.random() * 2 - 1) * 0.15;
-    d[i] = env * (buzz * 0.85 + noise);
-  }
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  connectAndPlay(ctx, src, 0.7, dur);
-}
-
-const FART_LIBRARY = [
-  fartClassic,
-  fartSqueaker,
-  fartRumbler,
-  fartSputter,
-  fartWhoopee,
-  fartSqueal,
+const FART_SOURCES = [
+  fart1, fart2, fart3, fart4, fart5, fart6,
+  fart7, fart8, fart9, fart10, fart11,
 ];
 
-let lastFartIndex = -1;
+// Pre-load all audio objects once so there's no delay on first play
+const FART_AUDIO = FART_SOURCES.map(src => {
+  const audio = new Audio(src);
+  audio.preload = 'auto';
+  return audio;
+});
+
+let lastIndex = -1;
 
 export function playFart() {
   try {
-    const ctx = getCtx();
-    // Pick a random fart that isn't the same as last time
+    // Pick a random sound that isn't the same as last time
     let idx;
     do {
-      idx = Math.floor(Math.random() * FART_LIBRARY.length);
-    } while (idx === lastFartIndex && FART_LIBRARY.length > 1);
-    lastFartIndex = idx;
-    FART_LIBRARY[idx](ctx);
+      idx = Math.floor(Math.random() * FART_AUDIO.length);
+    } while (idx === lastIndex && FART_AUDIO.length > 1);
+    lastIndex = idx;
+
+    const audio = FART_AUDIO[idx];
+    audio.currentTime = 0; // rewind in case it was played recently
+    audio.play().catch(e => console.warn('Fart blocked:', e));
   } catch (e) {
-    console.warn('Fart sound failed:', e);
+    console.warn('Fart error:', e);
   }
 }
 
-// Unlock audio context on first user interaction (required by browsers)
-export function unlockAudio() {
-  try {
-    const ctx = getCtx();
-    if (ctx.state === 'suspended') ctx.resume();
-  } catch (_) {}
-}
+// No-op kept for API compatibility with App.jsx
+export function unlockAudio() {}
