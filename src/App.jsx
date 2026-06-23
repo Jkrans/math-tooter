@@ -24,51 +24,96 @@ function generateQuestion(selected) {
 function Logo() {
   return (
     <div className={styles.logoWrap}>
-      <svg viewBox="0 0 340 80" className={styles.logoSvg} aria-label="Math Tooter — multiplication practice the tooty way" role="img">
-        <defs>
-          <linearGradient id="lgBg" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#3C3489" />
-            <stop offset="100%" stopColor="#7F77DD" />
-          </linearGradient>
-        </defs>
-        <rect x="0" y="0" width="340" height="80" rx="16" fill="url(#lgBg)" />
-        <text x="18" y="50" fontFamily="-apple-system, BlinkMacSystemFont, system-ui, sans-serif" fontSize="40" fontWeight="500" fill="#EEEDFE" letterSpacing="-1">Math</text>
-        <text x="140" y="50" fontFamily="-apple-system, BlinkMacSystemFont, system-ui, sans-serif" fontSize="40" fontWeight="500" fill="#FAC775" letterSpacing="-1">Tooter</text>
-        <text x="284" y="48" fontSize="28">💨</text>
-        <text x="18" y="68" fontFamily="-apple-system, BlinkMacSystemFont, system-ui, sans-serif" fontSize="11" fill="#AFA9EC" letterSpacing="0.8">multiplication practice — the tooty way</text>
+      <svg width="100%" viewBox="0 0 380 160" role="img" xmlns="http://www.w3.org/2000/svg" aria-label="Math Tooter logo">
+        <rect x="0" y="0" width="380" height="160" rx="20" fill="#3C3489"/>
+
+        {/* Text - left side */}
+        <text x="30" y="75" fontFamily="'Fredoka One', cursive" fontSize="52" fontWeight="400" fill="#EEEDFE" letterSpacing="0">Math</text>
+        <text x="30" y="132" fontFamily="'Fredoka One', cursive" fontSize="52" fontWeight="400" fill="#FAC775" letterSpacing="0">Tooter</text>
+
+        {/* Poop - right side, raised 20px */}
+        <ellipse cx="310" cy="128" rx="46" ry="10" fill="#3d1f00" opacity="0.4"/>
+        <ellipse cx="310" cy="122" rx="44" ry="16" fill="#5C3317"/>
+        <ellipse cx="310" cy="112" rx="36" ry="18" fill="#6B3A1F"/>
+        <ellipse cx="310" cy="96" rx="26" ry="18" fill="#7A4428"/>
+        <ellipse cx="310" cy="80" rx="18" ry="16" fill="#8B5230"/>
+        <path d="M300 70 Q300 54 310 50 Q322 46 324 58 Q326 68 316 70" fill="#9B5E38"/>
+        <ellipse cx="312" cy="50" rx="9" ry="9" fill="#9B5E38"/>
+        <ellipse cx="308" cy="47" rx="3.5" ry="2.5" fill="#B8724A" opacity="0.6"/>
+
+        {/* Eyes */}
+        <ellipse cx="300" cy="106" rx="10" ry="11" fill="white"/>
+        <ellipse cx="320" cy="106" rx="10" ry="11" fill="white"/>
+        <ellipse cx="301" cy="107" rx="5.5" ry="6.5" fill="#1a0a00"/>
+        <ellipse cx="321" cy="107" rx="5.5" ry="6.5" fill="#1a0a00"/>
+        <circle cx="303" cy="104" r="1.8" fill="white"/>
+        <circle cx="323" cy="104" r="1.8" fill="white"/>
+
+        {/* Smile */}
+        <path d="M296 121 Q310 131 324 121" stroke="#3d1f00" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+        <path d="M301 123 Q310 129 319 123 Q319 128 310 129 Q301 128 301 123Z" fill="white"/>
+
+        {/* Glasses */}
+        <rect x="288" y="99" width="20" height="14" rx="7" fill="none" stroke="#1a0a00" strokeWidth="2.5"/>
+        <rect x="311" y="99" width="20" height="14" rx="7" fill="none" stroke="#1a0a00" strokeWidth="2.5"/>
+        <line x1="308" y1="106" x2="311" y2="106" stroke="#1a0a00" strokeWidth="2"/>
+        <line x1="288" y1="106" x2="281" y2="106" stroke="#1a0a00" strokeWidth="2" strokeLinecap="round"/>
+        <line x1="331" y1="106" x2="338" y2="106" stroke="#1a0a00" strokeWidth="2" strokeLinecap="round"/>
+
+        {/* Mortarboard */}
+        <rect x="290" y="70" width="40" height="8" rx="4" fill="#1a0a00"/>
+        <rect x="282" y="59" width="56" height="13" rx="3" fill="#1a0a00"/>
+        <line x1="338" y1="63" x2="344" y2="77" stroke="#FAC775" strokeWidth="2"/>
+        <line x1="344" y1="77" x2="340" y2="86" stroke="#FAC775" strokeWidth="2"/>
+        <line x1="344" y1="77" x2="344" y2="88" stroke="#FAC775" strokeWidth="2"/>
+        <line x1="344" y1="77" x2="348" y2="86" stroke="#FAC775" strokeWidth="2"/>
       </svg>
     </div>
   );
 }
 
 // ── Number Selector ───────────────────────────────────────────────────────────
-function NumberSelector({ selected, onSelect }) {
+function NumberSelector({ selected, onSelect, isOpen, onToggle }) {
+  const label = selected === 'all' ? 'All numbers' : selected ? `${selected}s` : null;
+
   return (
     <div className={styles.numSelector}>
-      <p className={styles.selectorLabel}>Pick a number to practice</p>
-      <div className={styles.numGrid}>
-        {Array.from({ length: 12 }, (_, i) => i + 1).map(n => (
-          <button
-            key={n}
-            className={`${styles.numBtn} ${selected === String(n) ? styles.numBtnActive : ''}`}
-            onClick={() => onSelect(String(n))}
-            aria-pressed={selected === String(n)}
-          >
-            {n}
+      {/* Collapsed summary row — only shown after a number is picked */}
+      {selected && !isOpen && (
+        <div className={styles.selectorCollapsed}>
+          <span className={styles.selectorCollapsedLabel}>
+            Practicing: <strong>{label}</strong>
+          </span>
+          <button className={styles.changeBtn} onClick={onToggle}>
+            Change
           </button>
-        ))}
-        <button
-          className={`${styles.numBtn} ${styles.numBtnAll} ${selected === 'all' ? styles.numBtnActive : ''}`}
-          onClick={() => onSelect('all')}
-          aria-pressed={selected === 'all'}
-        >
-          All
-        </button>
-      </div>
-      {selected && (
-        <p className={styles.selectorHint}>
-          {selected === 'all' ? 'Random mix — go for it! 🎲' : `Practicing ${selected}s`}
-        </p>
+        </div>
+      )}
+
+      {/* Full grid — shown when open or nothing selected yet */}
+      {isOpen && (
+        <>
+          <p className={styles.selectorLabel}>Pick a number to practice</p>
+          <div className={styles.numGrid}>
+            {Array.from({ length: 12 }, (_, i) => i + 1).map(n => (
+              <button
+                key={n}
+                className={`${styles.numBtn} ${selected === String(n) ? styles.numBtnActive : ''}`}
+                onClick={() => onSelect(String(n))}
+                aria-pressed={selected === String(n)}
+              >
+                {n}
+              </button>
+            ))}
+            <button
+              className={`${styles.numBtn} ${styles.numBtnAll} ${selected === 'all' ? styles.numBtnActive : ''}`}
+              onClick={() => onSelect('all')}
+              aria-pressed={selected === 'all'}
+            >
+              All
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
@@ -157,12 +202,13 @@ function FloatingEmojis({ clouds }) {
 }
 
 // ── Main App ──────────────────────────────────────────────────────────────────
-const CORRECT_EMOJIS = ['💨','🤣','💨','🌬️','😄','🎉','💨','👏'];
-const WRONG_EMOJIS   = ['💀','❌','😬','🙈','💩','😅','🤔'];
+const CORRECT_EMOJIS = ['💨','🤣','💨','🌬️','😄','🎉','💨','👏','💩'];
+const WRONG_EMOJIS   = ['💀','❌','😬','🙈',,'😅','🤔'];
 
 export default function App() {
-  const [selected, setSelected]   = useState(null);
-  const [question, setQuestion]   = useState(null);
+  const [selected, setSelected]       = useState(null);
+  const [selectorOpen, setSelectorOpen] = useState(true);
+  const [question, setQuestion]       = useState(null);
   const [inputVal, setInputVal]   = useState('');
   const [status, setStatus]       = useState(null);
   const [feedback, setFeedback]   = useState('');
@@ -202,9 +248,9 @@ export default function App() {
 
   const handleSelectNum = (n) => {
     setSelected(n);
+    setSelectorOpen(false);
     setScore({ correct: 0, total: 0, streak: 0 });
     streakRef.current = 0;
-    // Generate question inline so we don't depend on state update timing
     setQuestion(generateQuestion(n));
     setInputVal('');
     setStatus(null);
@@ -269,7 +315,7 @@ export default function App() {
 
       <main className={styles.main}>
         <Logo />
-        <NumberSelector selected={selected} onSelect={handleSelectNum} />
+        <NumberSelector selected={selected} onSelect={handleSelectNum} isOpen={selectorOpen} onToggle={() => setSelectorOpen(o => !o)} />
 
         {question && (
           <>
