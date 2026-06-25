@@ -219,7 +219,7 @@ function FloatingEmojis({ clouds }) {
 
 // ── Main App ──────────────────────────────────────────────────────────────────
 const CORRECT_EMOJIS = ['💨','🤣','💨','🌬️','😄','🎉','💨','👏','💩'];
-const WRONG_EMOJIS   = ['💀','❌','😬','🙈','💩','😅','🤔'];
+const WRONG_EMOJIS   = ['💀','❌','😬','🙈','😅','🤔'];
 
 // screen: 'setup' | 'game' | 'results'
 export default function App() {
